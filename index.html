@@ -376,6 +376,33 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ── Policy (plain, no box) ── */
+        .policy-item {
+            margin-bottom: 26px;
+        }
+        .policy-item:last-child { margin-bottom: 0; }
+        .policy-title {
+            font-family: var(--font-heading);
+            font-size: 1.12rem;
+            font-weight: 600;
+            line-height: 1.35;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .policy-venue {
+            font-size: 0.88rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+        }
+        .policy-authors {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        .policy-authors a { text-decoration: none; }
+        .policy-authors a:hover { text-decoration: underline; }
+
         /* ── Teaching ── */
         .teaching-item {
             display: grid;
@@ -480,6 +507,7 @@
             <nav class="top-nav" id="topNav">
                 <a href="#about">About</a>
                 <a href="#research">Research</a>
+                <a href="#policy">Policy</a>
                 <a href="#teaching">Teaching</a>
             </nav>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle day / night mode">
@@ -597,6 +625,28 @@
                     <div class="paper-title">
                         General Equilibrium Effects of Distortionary Agricultural Policies: India’s Irrigation Canals and the Price Support Regime
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Policy ── -->
+        <section class="section" id="policy">
+            <h2>Policy</h2>
+
+            <div class="policy-item">
+                <div class="policy-title">
+                    <!-- TODO: policy paper title -->
+                    Strategies for Resilient Entrepreneurship
+                </div>
+                <!-- Optional venue line (edit or delete): -->
+                <div class="policy-venue">LSE South Asia Centre</div>
+                <div class="policy-authors">
+                    <!-- TODO: co-authors -->
+                    with <a href="https://www.brunel.ac.uk/people/luke-heslop">Luke Heslop</a>, <a href="https://www.lse.ac.uk/people/david-lewis">David Lewis</a>, Abhilash Puljal, <a href="https://www.lse.ac.uk/management/people/academic-staff/naufel-vilcassim">Naufel Vilcassim</a> and Anushka Wijesinha 
+                </div>
+                <div class="paper-links">
+                    <!-- TODO: link to the policy paper / brief -->
+                    <a href="https://www.lse.ac.uk/south-asia-centre/assets/documents/WorkingPapers/SriLanka-FINAL-Resilient-Entrepreneurship.pdf">Paper</a>
                 </div>
             </div>
         </section>
