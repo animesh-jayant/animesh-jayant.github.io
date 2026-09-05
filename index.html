@@ -333,8 +333,14 @@
         .paper-links {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             gap: 8px;
             margin-top: 10px;
+        }
+        .paper-soon {
+            font-size: 0.82rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
         }
         .paper-links a, .paper-links button {
             font-family: var(--font-body);
@@ -506,7 +512,8 @@
         <div class="topbar">
             <nav class="top-nav" id="topNav">
                 <a href="#about">About</a>
-                <a href="#research">Research</a>
+                <a href="#working-papers">Working Papers</a>
+                <a href="#work-in-progress">Work in Progress</a>
                 <a href="#policy">Policy</a>
                 <a href="#teaching">Teaching</a>
             </nav>
@@ -532,9 +539,9 @@
             </div>
         </section>
 
-        <!-- ── Research ── -->
-        <section class="section" id="research">
-            <h2>Research</h2>
+        <!-- ── Working Papers ── -->
+        <section class="section" id="working-papers">
+            <h2>Working Papers</h2>
 
             <!-- JMP -->
             <div class="paper">
@@ -545,8 +552,8 @@
                     </div>
                     <div class="paper-links">
                         <button onclick="toggleAbstract('jmp-abstract')">▸ Abstract</button>
-                        <!-- <a href="#">[Paper]</a> TODO: link to JMP PDF -->
                         <button onclick="toggleAbstract('jmp-presentations')">▸ Presentations</button>
+                        <span class="paper-soon">Draft coming soon</span>
                     </div>
                     <div class="abstract" id="jmp-abstract">
                         Climate change imposes large and growing costs on agriculture by lowering yields. But it can also hurt farmers through the prices they receive, especially since they sell to intermediaries who wield substantial buyer power and are themselves exposed to climate shocks. An intermediary that exits strands its farmers and strengthens survivors' buyer power. However, one that adapts may raise the value of its farmers' crop and offset damages. To investigate this, I study drought-induced market restructuring in the Indian sugar industry, where farmers sell water-intensive cane to intermediary mills. Using a novel 35-year panel covering the universe of Indian sugar mills, and georeferenced transactions for 3 million cane farmers, I employ a staggered event study design to show that droughts drive the least productive mills to exit and their farmers to reallocate to nearby survivors. This reallocation raises survivors' return to upgrading and drives long-term productivity growth. Strikingly, farm-gate prices and income do not rise, with mills capturing the gains through amplified markdowns. Market restructuring plays a dual role -- it drives within-mill adaptation but suppresses the price rise that would cushion farmers' yield losses. To rationalize these findings, I develop a structural model of the Indian sugar value chain, decompose productivity gains and welfare, and evaluate policies that protect farmers while preserving intermediary adaptation.
@@ -556,6 +563,29 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Second working paper — placeholder, fill in later -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        The Interaction of Contracting Frictions and Market Power in Agricultural Supply Chains
+                    </div>
+                    <div class="paper-authors">with <a href="https://sites.google.com/site/roccomacchiavello/">Rocco Macchiavello</a> and Juan Quicaña</div>
+                    <div class="paper-links">
+                        <button onclick="toggleAbstract('wp2-abstract')">▸ Abstract</button>
+                        <span class="paper-soon">Draft coming soon</span>
+                    </div>
+                    <div class="abstract" id="wp2-abstract">
+                        <!-- TODO: replace with the paper's abstract -->
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Work in Progress ── -->
+        <section class="section" id="work-in-progress">
+            <h2>Work in Progress</h2>
 
             <!-- Paper 2 -->
             <div class="paper">
@@ -636,17 +666,17 @@
             <div class="policy-item">
                 <div class="policy-title">
                     <!-- TODO: policy paper title -->
-                    Strategies for Resilient Entrepreneurship in Sri Lanka
+                    Policy Paper Title Goes Here
                 </div>
                 <!-- Optional venue line (edit or delete): -->
-                <div class="policy-venue">LSE South Asia Centre</div>
+                <div class="policy-venue">IGC Policy Brief</div>
                 <div class="policy-authors">
                     <!-- TODO: co-authors -->
-                    with <a href="https://www.brunel.ac.uk/people/luke-heslop">Luke Heslop</a>, <a href="https://www.lse.ac.uk/people/david-lewis">David Lewis</a>, Abhilash Puljal, <a href="https://www.lse.ac.uk/management/people/academic-staff/naufel-vilcassim">Naufel Vilcassim</a> and Anushka Wijesinha 
+                    with <a href="#">Coauthor One</a> and <a href="#">Coauthor Two</a>
                 </div>
                 <div class="paper-links">
                     <!-- TODO: link to the policy paper / brief -->
-                    <a href="https://www.lse.ac.uk/south-asia-centre/assets/documents/WorkingPapers/SriLanka-FINAL-Resilient-Entrepreneurship.pdf">Paper</a>
+                    <a href="#">[Link]</a>
                 </div>
             </div>
         </section>
