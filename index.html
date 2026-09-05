@@ -10,6 +10,18 @@
 
     <title>Animesh Jayant — Economics PhD Candidate, LSE</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Set theme before paint to avoid a flash -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (saved === 'dark' || (!saved && prefersDark)) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -18,15 +30,36 @@
             --color-bg: #FAFAF7;
             --color-text: #1a1a1a;
             --color-text-secondary: #555;
-            --color-accent: #8B2500;
-            --color-accent-light: #A63A1A;
+            --color-accent: #A32330;
+            --color-accent-light: #C13340;
             --color-border: #ddd;
             --color-card-bg: #fff;
             --color-tag-bg: #f0ebe4;
             --color-tag-text: #6b5c4d;
+            --color-inset: #f8f7f4;
+            --color-hairline: #eee;
+            --color-hover-border: #cfc8bd;
             --font-heading: 'Source Serif 4', Georgia, serif;
             --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
-            --max-width: 820px;
+            --layout-max: 1160px;
+            --sidebar-width: 320px;
+            --gutter: 64px;
+        }
+
+        /* ── Dark ("night") theme ── */
+        :root[data-theme="dark"] {
+            --color-bg: #1b1917;
+            --color-text: #ece6dc;
+            --color-text-secondary: #a8a094;
+            --color-accent: #4FB0AE;
+            --color-accent-light: #6FC3C1;
+            --color-border: #3a352f;
+            --color-card-bg: #232019;
+            --color-tag-bg: #33291f;
+            --color-tag-text: #d8b79a;
+            --color-inset: #201d18;
+            --color-hairline: #2e2a24;
+            --color-hover-border: #4a443c;
         }
 
         * {
@@ -47,141 +80,81 @@
             font-size: 16px;
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* ── Navigation ── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: rgba(250, 250, 247, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            transition: box-shadow 0.3s ease;
-        }
+        a { color: var(--color-accent); }
 
-        nav.scrolled {
-            box-shadow: 0 1px 12px rgba(0,0,0,0.06);
-        }
-
-        .nav-inner {
-            max-width: var(--max-width);
+        /* ─────────────────────────────────────────────
+           LAYOUT: sticky left sidebar + scrolling right
+           ───────────────────────────────────────────── */
+        .layout {
+            max-width: var(--layout-max);
             margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-        }
-
-        .nav-name {
-            font-family: var(--font-heading);
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--color-text);
-            text-decoration: none;
-            letter-spacing: -0.01em;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 28px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-size: 0.88rem;
-            color: var(--color-text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-            letter-spacing: 0.01em;
-        }
-
-        .nav-links a:hover {
-            color: var(--color-accent);
-        }
-
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 22px;
-            height: 2px;
-            background: var(--color-text);
-            margin: 5px 0;
-            transition: all 0.3s;
-            border-radius: 1px;
-        }
-
-        /* ── Hero / Header ── */
-        .hero {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 120px 24px 60px;
+            padding: 0 40px;
             display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 48px;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            column-gap: var(--gutter);
             align-items: start;
         }
 
-        .hero-photo {
-            width: 250px;
-            height: 250px;
-            border-radius: 6px;
+        /* ── Left sidebar (stays in place) ── */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            align-self: start;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 56px 0 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            /* hide scrollbar but keep scrollability */
+            scrollbar-width: none;
+        }
+        .sidebar::-webkit-scrollbar { display: none; }
+
+        .side-name {
+            font-family: var(--font-heading);
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .side-photo {
+            width: 231px;
+            height: 231px;
+            border-radius: 8px;
             object-fit: cover;
             background: #e0dbd4;
             border: 1px solid var(--color-border);
         }
 
-        .photo-placeholder {
-            width: 250px;
-            height: 250px;
-            border-radius: 6px;
-            background: linear-gradient(145deg, #e8e3db, #d4cec4);
-            border: 1px solid var(--color-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.78rem;
-            color: #999;
-            text-align: center;
-            padding: 16px;
+        .photo-caption {
+            font-size: 0.72rem;
+            color: #9a938a;
+            margin-top: 8px;
+            letter-spacing: 0.01em;
         }
 
-        .hero-text h1 {
-            font-family: var(--font-heading);
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            line-height: 1.2;
-            margin-bottom: 6px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.05rem;
+        .side-title {
+            font-size: 0.95rem;
             color: var(--color-text-secondary);
-            margin-bottom: 20px;
+            margin-top: 20px;
             line-height: 1.5;
         }
-
-        .hero-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 24px;
+        .side-title strong {
+            color: var(--color-text);
+            font-weight: 600;
         }
 
-        .hero-links a {
+        .side-cta {
+            margin-top: 18px;
+        }
+        .side-cta a {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -190,108 +163,143 @@
             font-weight: 500;
             border-radius: 5px;
             text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
             background: var(--color-accent);
             color: #fff;
+            transition: background 0.2s;
         }
+        .side-cta a:hover { background: var(--color-accent-light); }
 
-        .btn-primary:hover {
-            background: var(--color-accent-light);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--color-text);
-            border: 1px solid var(--color-border);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-        }
-
-        .hero-contact {
-            font-size: 0.88rem;
+        .side-contact {
+            font-size: 0.85rem;
             color: var(--color-text-secondary);
             line-height: 1.7;
+            margin-top: 18px;
+        }
+        .side-contact a { text-decoration: none; }
+        .side-contact a:hover { text-decoration: underline; }
+
+        /* ─────────────────────────────────────────────
+           RIGHT COLUMN: scrolling content
+           ───────────────────────────────────────────── */
+        .content {
+            padding: 0 0 40px;
         }
 
-        .hero-contact a {
-            color: var(--color-accent);
+        /* ── Horizontal section nav pinned to the top of the right column ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 0 16px;
+            margin-bottom: 24px;
+            background: var(--color-bg);
+            border-bottom: 1px solid var(--color-border);
+            transition: background-color 0.3s ease;
+        }
+
+        .top-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+        }
+        .top-nav a {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
             text-decoration: none;
+            letter-spacing: 0.01em;
+            transition: color 0.2s;
+        }
+        .top-nav a:hover,
+        .top-nav a.active {
+            color: var(--color-accent);
         }
 
-        .hero-contact a:hover {
-            text-decoration: underline;
+        /* ── Day / night toggle ── */
+        .theme-toggle {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 50%;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
         }
+        .theme-toggle:hover {
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+        .theme-toggle svg { width: 18px; height: 18px; }
+        .theme-toggle .icon-sun { display: none; }
+        :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+        :root[data-theme="dark"] .theme-toggle .icon-sun { display: inline; }
 
-        /* ── Sections ── */
         .section {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 48px 24px;
+            margin-bottom: 12px;
+            padding-bottom: 40px;
         }
-
-        .section-divider {
-            border: none;
-            border-top: 1px solid var(--color-border);
-            max-width: var(--max-width);
-            margin: 0 auto;
+        .section:not(:last-of-type) {
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 40px;
         }
 
         .section h2 {
             font-family: var(--font-heading);
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             letter-spacing: -0.02em;
             color: var(--color-text);
         }
 
         .about-text {
-            font-size: 0.98rem;
+            font-size: 1rem;
             line-height: 1.75;
             color: var(--color-text);
-            max-width: 680px;
         }
-
-        .about-text a {
-            color: var(--color-accent);
-            text-decoration: none;
-        }
-
-        .about-text a:hover {
-            text-decoration: underline;
-        }
+        .about-text a { text-decoration: none; }
+        .about-text a:hover { text-decoration: underline; }
+        .about-text p + p { margin-top: 12px; }
 
         .jm-notice {
-            margin-top: 16px;
+            margin-top: 18px;
             padding: 12px 16px;
             background: var(--color-tag-bg);
             border-radius: 5px;
             font-size: 0.92rem;
             border-left: 3px solid var(--color-accent);
         }
+        .jm-notice a { text-decoration: none; }
+        .jm-notice a:hover { text-decoration: underline; }
 
-        /* ── Papers ── */
+        /* ── Research cards (box + thumbnail) ── */
         .paper {
-            margin-bottom: 36px;
-            padding-bottom: 36px;
-            border-bottom: 1px solid #eee;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
         }
-
-        .paper:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
+        .paper:last-child { margin-bottom: 0; }
+        .paper:hover {
+            box-shadow: 0 6px 22px rgba(0,0,0,0.07);
+            border-color: var(--color-hover-border);
+            transform: translateY(-2px);
         }
 
         .paper-title {
             font-family: var(--font-heading);
-            font-size: 1.15rem;
+            font-size: 1.12rem;
             font-weight: 600;
             margin-bottom: 4px;
             line-height: 1.35;
@@ -301,7 +309,7 @@
         .paper-tag {
             display: inline-block;
             padding: 2px 10px;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.06em;
@@ -309,21 +317,9 @@
             margin-left: 8px;
             vertical-align: middle;
         }
-
-        .tag-jmp {
-            background: var(--color-accent);
-            color: #fff;
-        }
-
-        .tag-submitted {
-            background: var(--color-tag-bg);
-            color: var(--color-tag-text);
-        }
-
-        .tag-new {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
+        .tag-jmp { background: var(--color-accent); color: #fff; }
+        .tag-submitted { background: var(--color-tag-bg); color: var(--color-tag-text); }
+        .tag-new { background: #e8f5e9; color: #2e7d32; }
 
         .paper-authors {
             font-size: 0.9rem;
@@ -331,17 +327,18 @@
             margin-bottom: 10px;
             font-style: italic;
         }
+        .paper-authors a { text-decoration: none; }
+        .paper-authors a:hover { text-decoration: underline; }
 
         .paper-links {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
-
         .paper-links a, .paper-links button {
             font-family: var(--font-body);
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 500;
             padding: 5px 12px;
             border-radius: 4px;
@@ -349,46 +346,30 @@
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid var(--color-border);
-            background: var(--color-card-bg);
+            background: var(--color-bg);
             color: var(--color-text);
         }
-
         .paper-links a:hover, .paper-links button:hover {
             border-color: var(--color-accent);
             color: var(--color-accent);
         }
 
-        .abstract {
+        .abstract, .presentations {
             display: none;
             margin-top: 12px;
-            padding: 16px 18px;
-            background: #f8f7f4;
+            padding: 14px 16px;
+            background: var(--color-inset);
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             line-height: 1.7;
             color: var(--color-text-secondary);
             border-left: 3px solid var(--color-border);
         }
-
-        .abstract.open {
+        .abstract.open, .presentations.open {
             display: block;
             animation: fadeIn 0.25s ease;
         }
-
-        .presentations {
-            display: none;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: var(--color-text-secondary);
-            padding: 10px 16px;
-            background: #f8f7f4;
-            border-radius: 5px;
-        }
-
-        .presentations.open {
-            display: block;
-            animation: fadeIn 0.25s ease;
-        }
+        .presentations a { color: var(--color-accent); text-decoration: none; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-4px); }
@@ -396,119 +377,55 @@
         }
 
         /* ── Teaching ── */
-        .teaching-grid {
-            display: grid;
-            gap: 16px;
-        }
-
         .teaching-item {
             display: grid;
             grid-template-columns: 80px 1fr auto;
             gap: 12px;
             align-items: baseline;
             padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--color-hairline);
         }
-
-        .teaching-item:last-child {
-            border-bottom: none;
-        }
-
+        .teaching-item:last-child { border-bottom: none; }
         .teaching-code {
             font-size: 0.88rem;
             font-weight: 600;
             color: var(--color-accent);
             letter-spacing: 0.02em;
         }
-
-        .teaching-name {
-            font-size: 0.98rem;
-        }
-
+        .teaching-name { font-size: 0.98rem; }
         .teaching-level {
             font-size: 0.82rem;
             color: var(--color-text-secondary);
             letter-spacing: 0.04em;
         }
 
-        /* ── Education ── */
-        .education-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .education-item:last-child {
-            border-bottom: none;
-        }
-
-        .edu-degree {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .edu-institution {
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-        }
-
         /* ── Footer ── */
         footer {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 40px 24px;
-            text-align: center;
-            font-size: 0.82rem;
+            padding: 32px 0 48px;
+            font-size: 0.8rem;
             color: #aaa;
         }
 
-        /* ── Responsive ── */
-        @media (max-width: 700px) {
-            .hero {
+        /* ─────────────────────────────────────────────
+           RESPONSIVE: collapse to single column
+           ───────────────────────────────────────────── */
+        @media (max-width: 860px) {
+            .layout {
                 grid-template-columns: 1fr;
-                padding-top: 100px;
-                gap: 28px;
+                padding: 0 24px;
+                column-gap: 0;
+            }
+            .sidebar {
+                position: static;
+                height: auto;
+                overflow: visible;
+                padding: 44px 0 8px;
+                align-items: center;
                 text-align: center;
             }
-
-            .photo-placeholder, .hero-photo {
-                margin: 0 auto;
-                width: 250px;
-                height: 250px;
-            }
-
-            .hero-links {
-                justify-content: center;
-            }
-
-            .hero-contact {
-                text-align: center;
-            }
-
-            .hero-text h1 {
-                font-size: 1.75rem;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background: rgba(250, 250, 247, 0.98);
-                backdrop-filter: blur(12px);
-                flex-direction: column;
-                padding: 20px 24px;
-                gap: 16px;
-                border-bottom: 1px solid var(--color-border);
-            }
-
-            .nav-links.open {
-                display: flex;
-            }
-
-            .hamburger {
-                display: block;
-            }
+            .side-cta, .side-contact { align-self: center; }
+            .content { padding: 0 0 20px; }
+            .topbar { top: 0; }
 
             .teaching-item {
                 grid-template-columns: 1fr;
@@ -524,243 +441,234 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-TCS7T0GKE6');
 </script>
 
 <body>
 
-<!-- ── Navigation ── -->
-<nav id="nav">
-    <div class="nav-inner">
-        <a href="#" class="nav-name">Animesh Jayant</a>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#about">About</a></li>
-            <li><a href="#research">Research</a></li>
-            <li><a href="#teaching">Teaching</a></li>
-        </ul>
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
-</nav>
+<div class="layout">
 
-<!-- ── Hero ── -->
-<header class="hero">
-    <img class="hero-photo" src="photo.jpg" alt="Animesh Jayant">
-    <div class="hero-text">
-        <h1>Animesh Jayant</h1>
-        <p class="hero-subtitle">
+    <!-- ════════════ LEFT SIDEBAR (sticky) ════════════ -->
+    <aside class="sidebar">
+        <h1 class="side-name">Animesh Jayant</h1>
+
+        <img class="side-photo" src="photo.jpg" alt="Animesh Jayant">
+        <!-- Optional caption under the photo (edit or delete): -->
+        <!-- <div class="photo-caption">London, 2026</div> -->
+
+        <p class="side-title">
             PhD Candidate in Economics<br>
-            London School of Economics
+            <strong>London School of Economics</strong>
         </p>
-        <div class="hero-links">
-            <a href="cv_aj.pdf" class="btn-primary">Download CV</a>
-            <!-- a href="#" class="btn-outline"> TODO: link to JMP PDF Job Market Paper</a> -->
+
+        <div class="side-cta">
+            <a href="cv_aj.pdf">Download CV</a>
         </div>
-        <div class="hero-contact">
+
+        <div class="side-contact">
             <a href="mailto:a.jayant@lse.ac.uk">a.jayant@lse.ac.uk</a><br>
-            <!-- TODO: update address -->
-             32 Lincoln's Inn Fields <br> London WC2A 3PH, UK
+            32 Lincoln's Inn Fields<br>
+            London WC2A 3PH, UK
         </div>
-    </div>
-</header>
+    </aside>
 
-<hr class="section-divider">
+    <!-- ════════════ RIGHT COLUMN (scrolls) ════════════ -->
+    <main class="content">
 
-<!-- ── About ── -->
-<section class="section" id="about">
-    <h2>Welcome!</h2>
-    <div class="about-text">
-        <p>
-            I am a PhD Candidate in Economics at the London School of Economics. I study environmental and organizational questions concerning agricultural supply chains using tools from international trade and empirical industrial organization.
-        </p>
-        <p style="margin-top: 12px;">
-            Prior to LSE, I obtained an MA in Research Methods from the University of Chicago and a BTech in Metallurgical Engineering and Materials Science from the Indian Institute of Technology Bombay.
-        </p>
-        <div class="jm-notice">
-            I will be on the <strong>2026–27 academic job market</strong>. <a href="cv_aj.pdf">View my CV here.</a>
-            <!-- TODO: update job market year if needed, link CV -->
+        <!-- Horizontal section nav + day/night toggle -->
+        <div class="topbar">
+            <nav class="top-nav" id="topNav">
+                <a href="#about">About</a>
+                <a href="#research">Research</a>
+                <a href="#teaching">Teaching</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle day / night mode">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
         </div>
-    </div>
-</section>
 
-<hr class="section-divider">
+        <!-- ── About ── -->
+        <section class="section" id="about">
+            <h2>About</h2>
+            <div class="about-text">
+                <p>
+                    I am a PhD Candidate in Economics at the London School of Economics. I study environmental and organizational questions concerning agricultural supply chains using tools from international trade and empirical industrial organization.
+                </p>
+                <p>
+                    Prior to LSE, I obtained an MA in Research Methods from the University of Chicago and a BTech in Metallurgical Engineering and Materials Science from the Indian Institute of Technology Bombay.
+                </p>
+                <div class="jm-notice">
+                    I will be on the <strong>2026–27 academic job market</strong>. <a href="cv_aj.pdf">View my CV here.</a>
+                </div>
+            </div>
+        </section>
 
-<!-- ── Research ── -->
-<section class="section" id="research">
-    <h2>Work in Progress</h2>
+        <!-- ── Research ── -->
+        <section class="section" id="research">
+            <h2>Research</h2>
 
-    <!-- JMP -->
-    <div class="paper">
-        <div class="paper-title">
-            Priced Out by Drought: Climate Restructuring and Adaptation in Agricultural Value Chains 
-            <span class="paper-tag tag-jmp">Job Market Paper</span>
-        </div>
-        <!-- <div class="paper-authors">with [coauthors if any]</div> -->
-        <div class="paper-links">
-            <button onclick="toggleAbstract('jmp-abstract')">▸ Abstract</button>
-            <!-- <a href="#">[Paper]</a> TODO: link to JMP PDF --> 
-            <button onclick="toggleAbstract('jmp-presentations')">▸ Presentations</button>
-        </div>
-        <div class="abstract" id="jmp-abstract">
-            <!-- TODO: Replace with your actual JMP abstract -->
-            Climate change imposes large and growing costs on agriculture by lowering yields. But it can also hurt farmers through the prices they receive, especially since they sell to intermediaries who wield substantial buyer power and are themselves exposed to climate shocks. An intermediary that exits strands its farmers and strengthens survivors' buyer power. However, one that adapts may raise the value of its farmers' crop and offset damages. To investigate this, I study drought-induced market restructuring in the Indian sugar industry, where farmers sell water-intensive cane to intermediary mills. Using a novel 35-year panel covering the universe of Indian sugar mills, and georeferenced transactions for 3 million cane farmers, I employ a staggered event study design to show that droughts drive the least productive mills to exit and their farmers to reallocate to nearby survivors. This reallocation raises survivors' return to upgrading and drives long-term productivity growth. Strikingly, farm-gate prices and income do not rise, with mills capturing the gains through amplified markdowns. Market restructuring plays a dual role -- it drives within-mill adaptation but suppresses the price rise that would cushion farmers' yield losses. To rationalize these findings, I develop a structural model of the Indian sugar value chain, decompose productivity gains and welfare, and evaluate policies that protect farmers while preserving intermediary adaptation.
-        </div>
-        <div class="presentations" id="jmp-presentations">
-            <!-- TODO: Update with your actual presentations -->
-            <strong>Presentations:</strong> (2026) PEDL Climate and Environment at LSE Environment Week, PSE Environmental Economics Conference, <a href="https://www.ft.lk/business/Strategies-for-resilient-entrepreneurs/34-789037" style="color: #8B2500;text-decoration:none">Strategies for Resilient Entrepreneurship Colombo</a>
-        </div>
-    </div>
+            <!-- JMP -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        Priced Out by Drought: Climate Restructuring and Adaptation in Agricultural Value Chains
+                        <span class="paper-tag tag-jmp">Job Market Paper</span>
+                    </div>
+                    <div class="paper-links">
+                        <button onclick="toggleAbstract('jmp-abstract')">▸ Abstract</button>
+                        <!-- <a href="#">[Paper]</a> TODO: link to JMP PDF -->
+                        <button onclick="toggleAbstract('jmp-presentations')">▸ Presentations</button>
+                    </div>
+                    <div class="abstract" id="jmp-abstract">
+                        Climate change imposes large and growing costs on agriculture by lowering yields. But it can also hurt farmers through the prices they receive, especially since they sell to intermediaries who wield substantial buyer power and are themselves exposed to climate shocks. An intermediary that exits strands its farmers and strengthens survivors' buyer power. However, one that adapts may raise the value of its farmers' crop and offset damages. To investigate this, I study drought-induced market restructuring in the Indian sugar industry, where farmers sell water-intensive cane to intermediary mills. Using a novel 35-year panel covering the universe of Indian sugar mills, and georeferenced transactions for 3 million cane farmers, I employ a staggered event study design to show that droughts drive the least productive mills to exit and their farmers to reallocate to nearby survivors. This reallocation raises survivors' return to upgrading and drives long-term productivity growth. Strikingly, farm-gate prices and income do not rise, with mills capturing the gains through amplified markdowns. Market restructuring plays a dual role -- it drives within-mill adaptation but suppresses the price rise that would cushion farmers' yield losses. To rationalize these findings, I develop a structural model of the Indian sugar value chain, decompose productivity gains and welfare, and evaluate policies that protect farmers while preserving intermediary adaptation.
+                    </div>
+                    <div class="presentations" id="jmp-presentations">
+                        <strong>Presentations:</strong> (2026) PEDL Climate and Environment at LSE Environment Week, PSE Environmental Economics Conference, <a href="https://www.ft.lk/business/Strategies-for-resilient-entrepreneurs/34-789037">Strategies for Resilient Entrepreneurship Colombo</a>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Paper 2 -->
-    <div class="paper">
-        <div class="paper-title">
-            Optimal Membership in the Cooperative Firm: Sugar Cooperatives in India
-            <!-- <span class="paper-tag tag-new">New</span> -->
-        </div>
-        <!-- <div class="paper-authors">with [coauthors if any]</div> -->
-        <div class="paper-links">
-            <button onclick="toggleAbstract('p2-abstract')">▸ Abstract</button>
-            <!--a href="#">[Paper]</a> TODO: link to paper PDF -->
-        </div>
-        <div class="abstract" id="p2-abstract">
-            <!-- TODO: Replace with your actual abstract -->
-            Cooperative firms must decide how many of their input suppliers to admit as members. More members expand the captive supply base and increase processing throughput, but dilute per-member surplus through profit-sharing and extension service provision. Despite cooperatives' prevalence in agricultural markets worldwide, little is known about how this trade-off is resolved in practice. I study this question in India's sugar industry, where cooperative mills procure sugarcane from both member and non-member farmers – yet only a third of suppliers hold membership. Using farmer- and mill-level panel data covering the universe of both cane farmers and sugar mills in Maharashtra, I develop and estimate a structural model in which cooperatives endogenously choose membership thresholds while competing with private mills for farmer supply in a spatial oligopsony. The model features a nested discrete choice framework for farmer mill selection, an oligopsony pricing game among private mills, and a cooperative membership rule that trades off supply expansion against dividend dilution and governance costs. Counterfactual simulations quantify the welfare consequences of mandating open membership, eliminating cooperatives, and adjusting membership policy under climate stress.
-        </div>
-    </div>
+            <!-- Paper 2 -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        Optimal Membership in the Cooperative Firm: Sugar Cooperatives in India
+                    </div>
+                    <div class="paper-links">
+                        <button onclick="toggleAbstract('p2-abstract')">▸ Abstract</button>
+                    </div>
+                    <div class="abstract" id="p2-abstract">
+                        Cooperative firms must decide how many of their input suppliers to admit as members. More members expand the captive supply base and increase processing throughput, but dilute per-member surplus through profit-sharing and extension service provision. Despite cooperatives' prevalence in agricultural markets worldwide, little is known about how this trade-off is resolved in practice. I study this question in India's sugar industry, where cooperative mills procure sugarcane from both member and non-member farmers – yet only a third of suppliers hold membership. Using farmer- and mill-level panel data covering the universe of both cane farmers and sugar mills in Maharashtra, I develop and estimate a structural model in which cooperatives endogenously choose membership thresholds while competing with private mills for farmer supply in a spatial oligopsony. The model features a nested discrete choice framework for farmer mill selection, an oligopsony pricing game among private mills, and a cooperative membership rule that trades off supply expansion against dividend dilution and governance costs. Counterfactual simulations quantify the welfare consequences of mandating open membership, eliminating cooperatives, and adjusting membership policy under climate stress.
+                    </div>
+                </div>
+            </div>
 
-    <!-- Paper 3 -->
-    <div class="paper">
-        <div class="paper-title">
-            Farm Size Matters in a Warming World: Evidence from Indian Agriculture
-            <!-- <span class="paper-tag tag-new">New</span> -->
-        </div>
-        <!-- <div class="paper-authors">with [coauthors if any]</div> -->
-        <div class="paper-links">
-            <button onclick="toggleAbstract('p3-abstract')">▸ Abstract</button>
-            <!--a href="#">[Paper]</a> TODO: link to paper PDF -->
-        </div>
-        <div class="abstract" id="p3-abstract">
-            <!-- TODO: Replace with your actual abstract -->
-            Recent research highlights how climate damages can be mitigated through sectoral reallocation (Nath, 2025), crop reallocation (Costinot et al., 2016), and reducing trade and migration barriers (Conte et al., 2021). In this project, I evaluate the potential for reallocation between agricultural and non-agricultural production on the basis of farm size to serve as a margin of climate adaptation, and examine how input market and sectoral mobility frictions can hamper this process. I study this question in the context of India, a highly climate-vulnerable economy comprising 25% of the world's farms, proceeding in three steps. First, I present empirical estimates showing that productivity losses from rising temperatures are only half as large on larger farms relative to smaller ones — implying substantial gains if climate-exposed countries could promote farm consolidation and facilitate labour reallocation from vulnerable small farms into non-agriculture. Second, I document that long-run responses to rising temperatures see a shrinking of average farm sizes, driven by a decline in the number of large farms rather than the consolidation that efficient adaptation would predict. This points to an important role for input market frictions. Third, to rationalize these findings, I develop a theoretical framework embedding input market and sectoral mobility frictions in a Melitz model, and use it to quantify how these frictions dampen the gains from climate adaptation.
-        </div>
-    </div>
+            <!-- Paper 3 -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        Farm Size Matters in a Warming World: Evidence from Indian Agriculture
+                    </div>
+                    <div class="paper-links">
+                        <button onclick="toggleAbstract('p3-abstract')">▸ Abstract</button>
+                    </div>
+                    <div class="abstract" id="p3-abstract">
+                        Recent research highlights how climate damages can be mitigated through sectoral reallocation (Nath, 2025), crop reallocation (Costinot et al., 2016), and reducing trade and migration barriers (Conte et al., 2021). In this project, I evaluate the potential for reallocation between agricultural and non-agricultural production on the basis of farm size to serve as a margin of climate adaptation, and examine how input market and sectoral mobility frictions can hamper this process. I study this question in the context of India, a highly climate-vulnerable economy comprising 25% of the world's farms, proceeding in three steps. First, I present empirical estimates showing that productivity losses from rising temperatures are only half as large on larger farms relative to smaller ones — implying substantial gains if climate-exposed countries could promote farm consolidation and facilitate labour reallocation from vulnerable small farms into non-agriculture. Second, I document that long-run responses to rising temperatures see a shrinking of average farm sizes, driven by a decline in the number of large farms rather than the consolidation that efficient adaptation would predict. This points to an important role for input market frictions. Third, to rationalize these findings, I develop a theoretical framework embedding input market and sectoral mobility frictions in a Melitz model, and use it to quantify how these frictions dampen the gains from climate adaptation.
+                    </div>
+                </div>
+            </div>
 
-    <!-- Paper 4 -->
-    <div class="paper">
-        <div class="paper-title">
-            Market Competition and Quality Upgrading in the Indian Sugar Value Chain
-            <!-- <span class="paper-tag tag-new">New</span> -->
-        </div>
-        <div class="paper-authors">with <a href="https://sites.google.com/site/roccomacchiavello/" style="color: #8B2500;text-decoration:none">Rocco Macchiavello</a></div>
-        <div class="paper-links">
-            <button onclick="toggleAbstract('p4-abstract')">▸ Abstract</button>
-            <!--a href="#">[Paper]</a> TODO: link to paper PDF -->
-        </div>
-        <div class="abstract" id="p4-abstract">
-            <!-- TODO: Replace with your actual abstract -->
-            In principle, firms in developing countries benefit from the fact that advanced technologies have already been developed in industrialized countries and can simply be adopted. But for many firms this advantage remains elusive. In this project, we investigate the role of market competition in spurring quality upgrading within the Indian sugar industry – the world’s second largest, yet highly unproductive. To overcome measurement challenges that have hindered empirical progress on the subject, we use novel long-term administrative records on the universe of sugar manufacturers in India that comprise direct measures of plant-level technology, management and production. For identification, we rely on a natural experiment that introduces market competition in sugarcane markets with varied intensities in the state of Maharashtra - India's largest sugar producer. We document persistent effects of competition at each stage of the sugar value chain with significant benefits for both sugarcane farmers and sugar manufacturers.
-        </div>
-    </div>
+            <!-- Paper 4 -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        Market Competition and Quality Upgrading in the Indian Sugar Value Chain
+                    </div>
+                    <div class="paper-authors">with <a href="https://sites.google.com/site/roccomacchiavello/">Rocco Macchiavello</a></div>
+                    <div class="paper-links">
+                        <button onclick="toggleAbstract('p4-abstract')">▸ Abstract</button>
+                    </div>
+                    <div class="abstract" id="p4-abstract">
+                        In principle, firms in developing countries benefit from the fact that advanced technologies have already been developed in industrialized countries and can simply be adopted. But for many firms this advantage remains elusive. In this project, we investigate the role of market competition in spurring quality upgrading within the Indian sugar industry – the world’s second largest, yet highly unproductive. To overcome measurement challenges that have hindered empirical progress on the subject, we use novel long-term administrative records on the universe of sugar manufacturers in India that comprise direct measures of plant-level technology, management and production. For identification, we rely on a natural experiment that introduces market competition in sugarcane markets with varied intensities in the state of Maharashtra - India's largest sugar producer. We document persistent effects of competition at each stage of the sugar value chain with significant benefits for both sugarcane farmers and sugar manufacturers.
+                    </div>
+                </div>
+            </div>
 
-    <!-- Paper 5 -->
-    <div class="paper">
-        <div class="paper-title">
-            Contract Design in Voluntary Carbon Markets: Improving Performance and Building Climate Resilience
-            <!-- <span class="paper-tag tag-new">New</span> -->
-        </div>
-        <div class="paper-authors">with <a href="https://www.linkedin.com/in/shruti-bhimsaria-631b0180/" style="color: #8B2500;text-decoration:none">Shruti Bhimsaria</a></div>
-        <div class="paper-links">
-            <button onclick="toggleAbstract('p5-abstract')">▸ Abstract</button>
-            <!--a href="#">[Paper]</a> TODO: link to paper PDF -->
-        </div>
-        <div class="abstract" id="p5-abstract">
-            <!-- TODO: Replace with your actual abstract -->
-            Voluntary carbon markets can mobilize climate finance for low-income countries through nature-based solutions like agroforestry, which combines carbon sequestration with farmer resilience. Yet existing projects exhibit very low tree survival rates, reflecting two key failures in standard contracting models: adverse selection - as low-commitment landowners self-select into programs, and moral hazard - as farmer distrust of developers depresses maintenance effort. We study how contract design can mitigate these information asymmetries to improve market performance and strengthen climate adaptation. Partnering with a large agroforestry project developer in India, we implement a 2×2 cross-randomized controlled trial across 250 village clusters and 2,500 farmers. Each dimension of the factorial design targets a distinct information asymmetry: one varies contract features that screen on farmer commitment to address adverse selection, while the other varies developer-side investments that build relational trust to address moral hazard. We will evaluate impacts on four outcome families: selection; tree survival and carbon sequestration measured via drone-based digital MRV; income diversification and consumption smoothing under climate shocks; and environmental co-benefits including soil health and groundwater recharge.
-        </div>
-    </div>
+            <!-- Paper 5 -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        Contract Design in Voluntary Carbon Markets: Improving Performance and Building Climate Resilience
+                    </div>
+                    <div class="paper-authors">with <a href="https://www.linkedin.com/in/shruti-bhimsaria-631b0180/">Shruti Bhimsaria</a></div>
+                    <div class="paper-links">
+                        <button onclick="toggleAbstract('p5-abstract')">▸ Abstract</button>
+                    </div>
+                    <div class="abstract" id="p5-abstract">
+                        Voluntary carbon markets can mobilize climate finance for low-income countries through nature-based solutions like agroforestry, which combines carbon sequestration with farmer resilience. Yet existing projects exhibit very low tree survival rates, reflecting two key failures in standard contracting models: adverse selection - as low-commitment landowners self-select into programs, and moral hazard - as farmer distrust of developers depresses maintenance effort. We study how contract design can mitigate these information asymmetries to improve market performance and strengthen climate adaptation. Partnering with a large agroforestry project developer in India, we implement a 2×2 cross-randomized controlled trial across 250 village clusters and 2,500 farmers. Each dimension of the factorial design targets a distinct information asymmetry: one varies contract features that screen on farmer commitment to address adverse selection, while the other varies developer-side investments that build relational trust to address moral hazard. We will evaluate impacts on four outcome families: selection; tree survival and carbon sequestration measured via drone-based digital MRV; income diversification and consumption smoothing under climate shocks; and environmental co-benefits including soil health and groundwater recharge.
+                    </div>
+                </div>
+            </div>
 
-    <!-- Paper 6 -->
-    <div class="paper">
-        <div class="paper-title">
-            General Equilibrium Effects of Distortionary Agricultural Policies: India’s Irrigation Canals and the Price Support Regime
-            <!-- <span class="paper-tag tag-new">New</span> -->
-        </div>
-         <!-- <div class="paper-authors">with [coauthors if any]</div> -->
-    </div>
-</section>
+            <!-- Paper 6 -->
+            <div class="paper">
+                <div class="paper-body">
+                    <div class="paper-title">
+                        General Equilibrium Effects of Distortionary Agricultural Policies: India’s Irrigation Canals and the Price Support Regime
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<hr class="section-divider">
+        <!-- ── Teaching ── -->
+        <section class="section" id="teaching">
+            <h2>Teaching</h2>
+            <div class="teaching-item">
+                <span class="teaching-code">EC551</span>
+                <span class="teaching-name">Industrial Economics for Research Students I</span>
+                <span class="teaching-level">Invited Lecturer</span>
+            </div>
+            <div class="teaching-item">
+                <span class="teaching-code">MG206</span>
+                <span class="teaching-name">Business Strategy in International Markets</span>
+                <span class="teaching-level">Lecturer and Teaching Fellow</span>
+            </div>
+            <div class="teaching-item">
+                <span class="teaching-code">EC1C1</span>
+                <span class="teaching-name">Econometrics I</span>
+                <span class="teaching-level">Course Convenor and Teaching Fellow</span>
+            </div>
+            <div class="teaching-item">
+                <span class="teaching-code">EC1A5</span>
+                <span class="teaching-name">Microeconomics I</span>
+                <span class="teaching-level">Course Convenor and Teaching Fellow</span>
+            </div>
+            <div class="teaching-item">
+                <span class="teaching-code">EC1A3</span>
+                <span class="teaching-name">Microeconomics I</span>
+                <span class="teaching-level">Graduate Teaching Assistant</span>
+            </div>
+        </section>
 
-<!-- ── Teaching ── -->
-<section class="section" id="teaching">
-    <h2>Teaching</h2>
-    <!-- TODO: Update with your actual teaching experience -->
-    <div class="teaching-grid">
-        <div class="teaching-item">
-            <span class="teaching-code">EC551</span>
-            <span class="teaching-name">Industrial Economics for Research Students I</span>
-            <span class="teaching-level">Invited Lecturer</span>
-        </div>
-        <div class="teaching-item">
-            <span class="teaching-code">MG206</span>
-            <span class="teaching-name">Business Strategy in International Markets</span>
-            <span class="teaching-level">Lecturer and Teaching Fellow</span>
-        </div>
-        <div class="teaching-item">
-            <span class="teaching-code">EC1C1</span>
-            <span class="teaching-name">Econometrics I</span>
-            <span class="teaching-level">Course Convenor and Teaching Fellow</span>
-        </div>
-        <div class="teaching-item">
-            <span class="teaching-code">EC1A5</span>
-            <span class="teaching-name">Microeconomics I</span>
-            <span class="teaching-level">Course Convenor and Teaching Fellow</span>
-        </div>
-        <div class="teaching-item">
-            <span class="teaching-code">EC1A3</span>
-            <span class="teaching-name">Microeconomics I</span>
-            <span class="teaching-level">Graduate Teaching Assistant</span>
-        </div>
-       
-    </div>
-</section>
+        <footer>
+            Animesh Jayant, 2026
+        </footer>
 
-<hr class="section-divider">
-
-<!-- ── Footer ── -->
-<footer>
-    Animesh Jayant, 2026
-</footer>
+    </main>
+</div>
 
 <!-- ── Scripts ── -->
 <script>
-    // Nav scroll effect
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-        nav.classList.toggle('scrolled', window.scrollY > 10);
-    });
-
-    // Mobile hamburger
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('open');
-    });
-
-    // Close mobile menu on link click
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('open');
-        });
-    });
-
-    // Toggle abstracts/presentations
+    // Toggle abstracts / presentations
     function toggleAbstract(id) {
-        const el = document.getElementById(id);
-        el.classList.toggle('open');
+        document.getElementById(id).classList.toggle('open');
     }
+
+    // Highlight the section currently in view in the top nav
+    const navLinks = document.querySelectorAll('#topNav a');
+    const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href')));
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+            }
+        });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => s && observer.observe(s));
+
+    // Day / night toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        const root = document.documentElement;
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            root.removeAttribute('data-theme');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+        }
+        try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch (e) {}
+    });
 </script>
 
 </body>
