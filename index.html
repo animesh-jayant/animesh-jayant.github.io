@@ -317,7 +317,24 @@
             margin-left: 8px;
             vertical-align: middle;
         }
-        .tag-jmp { background: var(--color-accent); color: #fff; }
+        .tag-jmp {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+            color: var(--color-accent);
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.72rem;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+        .tag-jmp svg {
+            width: 11px;
+            height: 11px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
         .tag-submitted { background: var(--color-tag-bg); color: var(--color-tag-text); }
         .tag-new { background: #e8f5e9; color: #2e7d32; }
 
@@ -549,7 +566,10 @@
                 <div class="paper-body">
                     <div class="paper-title">
                         Priced Out by Drought: Climate Induced Restructuring in Agricultural Supply Chains
-                        <span class="paper-tag tag-jmp">Job Market Paper</span>
+                        <span class="paper-tag tag-jmp">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L14.9 8.6 L22 9.2 L16.5 13.9 L18.3 21 L12 17 L5.7 21 L7.5 13.9 L2 9.2 L9.1 8.6 Z"/></svg>
+                            Job Market Paper
+                        </span>
                     </div>
                     <div class="paper-links">
                         <button onclick="toggleAbstract('jmp-abstract')">▸ Abstract</button>
